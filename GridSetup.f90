@@ -11,7 +11,7 @@ module GridSetup
 	type gridType 
 		Integer(KINT)				:: 	numberOfPoints
 		Real(KREAL)					::	startInterval, endInterval
-		Real (KREAL)					:: 	distanceBetweenPoints 
+		Real (KREAL)			    :: 	distanceBetweenPoints 
 		Real(KREAL), allocatable 	:: 	Meshpoints(:)   
 	end type
 	
