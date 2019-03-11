@@ -39,10 +39,10 @@ contains
 			
 			allocate( self%Meshpoints(self%numberOfPoints) ) 
 			self%Meshpoints(1) 		     		= self%startInterval
-			self%distanceBetweenPoints		= (self%endInterval-self%startInterval)/self%numberOfPoints
+			self%distanceBetweenPoints		= (self%endInterval-self%startInterval+1)/self%numberOfPoints
 			
 			do i = 2, self%numberOfPoints
-				self%Meshpoints(i) = self%startInterval + i*self%distanceBetweenPoints
+				self%Meshpoints(i) = self%startInterval + (i-1)*self%distanceBetweenPoints
 			enddo 
 	end subroutine
 
