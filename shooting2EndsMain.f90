@@ -8,7 +8,7 @@ program Shooting2EndsTestGridSetup
 		type(gridType) 		:: testGrid 
 		integer(KINT) 		:: i 
 		
-		call getUserInputGrid(testGrid)
+		call readFromFile(testGrid)
 		call GridSetupNew(testGrid)
 		call createGrid(testGrid)
 		
