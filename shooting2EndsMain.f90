@@ -2,15 +2,23 @@ program Shooting2EndsTestGridSetup
 		use GridSetup 
 		use UserInput
 		use NumberKinds
+		use threePointScheme
 		
 		implicit none 
 		
-		type(gridType) 		:: testGrid 
-		integer(KINT) 		:: i 
+		type(gridType)   :: Grid 
+		integer(KINT)   :: i 
+		type(threePointSchemeType)   :: threePointScheme
 		
-		call readFromFile(testGrid)
-		call GridSetupNew(testGrid)
-		call createGrid(testGrid)
+		call readFromFile(Grid)
+		call GridSetupNew(Grid)
+		call createGrid(Grid)
+				
+		call threePointSchemeNew(threePointScheme)
+		call initialize_L(threePointScheme, Grid)
+		call Diagonalization(threePointScheme, Grid)
+		
+		call printEigenValuesVectors(threePointScheme, Grid)
 		
 end program
 	
