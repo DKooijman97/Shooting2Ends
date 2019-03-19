@@ -66,22 +66,22 @@ contains
 	  call diagonalize(self%L, self%eigenVectors, eigenvalues = self%eigenValues)
    end subroutine      
    
-   !Prints eigenValues and Vectors
+   !Prints 1st 10 eigenValues and Vectors
    subroutine printEigenValuesVectors(self, Grid) 	
       type(threePointSchemeType), intent(inout)  ::  self 
 	  type(gridType), intent(in) :: Grid
 	  integer  :: i
 	  
 	  print*, "This are the eigenValues"
-      do i = 1, Grid%numberOfPoints
-	     print'(100f15.8)',  self%eigenValues(i) 
+      do i = 1, 10
+	     print'(1000f15.8)',  self%eigenValues(i) 
 	  enddo 
 		
-	  print*, "========================================================================"
+	  print*, "___________________________________________"
 		
 	  print*, "This are the eigenvectors"
-	  do i = 1, Grid%numberOfPoints 
-	     print'(100f15.8)', self%eigenVectors(i,:) 
+	  do i = 1, 10  
+	  print'(1000of15.8)', self%eigenVectors(i,1) 
 	  enddo
    end subroutine
 	
