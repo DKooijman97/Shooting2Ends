@@ -13,15 +13,17 @@ program Shooting2EndsTestGridSetup
    type(shootingType) ::  Shooting
 		
    call readFromFile(Grid)
+   
    call GridSetupNew(Grid)
    call createGrid(Grid)
 				
    call threePointSchemeNew(threePointScheme)
-   call initialize_L(threePointScheme, Grid)
    call Diagonalization(threePointScheme, Grid)		
 				
    call shootingNew(Shooting)
    call calcEigenState(Shooting, Grid, threePointScheme)
+   
    call printEigenStates(Shooting%y, Grid%MeshPoints, threePointScheme%EigenValues(1), shooting%lambda)
+
 end program
 	
