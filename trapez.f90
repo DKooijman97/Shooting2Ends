@@ -22,12 +22,13 @@ module integration_module
 
    real(8) :: prefactor
    integer :: i,N
-
+   
+   v_int = 0
    N = b - a + 1 
 
    if (mod(N-1,6).eq.0) then 
 
-      write(*,*) '7-point'
+!      write(*,*) '7-point'
 
       prefactor = h/140.0d0
       do i = a+3,b-3,6
@@ -39,7 +40,7 @@ module integration_module
 
    else if (mod(N-1,5).eq.0) then 
 
-      write(*,*) '6-point'
+!      write(*,*) '6-point'
 
       prefactor = 5.0d0 * h/288.0d0
       do i = a+3,b-2,5
@@ -50,7 +51,7 @@ module integration_module
 
    else if (mod(N-1,4).eq.0) then 
 
-      write(*,*) '5-point'
+!      write(*,*) '5-point'
 
       prefactor = 2.0d0 * h/45.0d0
       do i = a+2,b-2,4
@@ -61,7 +62,7 @@ module integration_module
 
    else if (mod(N-1,3).eq.0) then
 
-      write(*,*) '4-point'
+!      write(*,*) '4-point'
 
       prefactor = 3.0d0 * h/8.0d0
       do i = a+1,b-2,3
@@ -70,7 +71,7 @@ module integration_module
 
    else if (mod(N-1,2).eq.0) then
 
-      write(*,*) '3-point'
+!      write(*,*) '3-point'
 
       prefactor = 1.0d0 * h/3.0d0
       do i = a+1,b-1,2
@@ -79,7 +80,7 @@ module integration_module
 
    else
 
-      write(*,*) '2-point'
+!     write(*,*) '2-point'
 
       prefactor = h/2.0d0
       do i = a+1,b-1
@@ -95,31 +96,32 @@ module integration_module
 
 end module
 
-program integration
-   use integration_module
-   implicit none 
+!Test Program? 
+!program integration
+!   use integration_module
+!   implicit none 
 
-   real(8) :: res2,h
-   integer, parameter :: Npoints =103, a = 1,b = 103
-   integer :: i
-   real(8), save,allocatable :: function(:) 
-   real(8) :: length
+!   real(8) :: res2,h
+!   integer, parameter :: Npoints =103, a = 1,b = 103
+!   integer :: i
+!   real(8), save,allocatable :: function(:) 
+!   real(8) :: length
 
-   allocate(function(Npoints))
+!   allocate(function(Npoints))
 
-   length = 10.0d0 
+!   length = 10.0d0 
 
-   h = length/(real(Npoints,8)-1) 
+!   h = length/(real(Npoints,8)-1) 
 
-   function = 0.0d0
+!   function = 0.0d0
 
-   do i = 1,Npoints
-      function(i) = (i-1)*h + 5
-   enddo
+!   do i = 1,Npoints
+!      function(i) = (i-1)*h + 5
+!   enddo
 
-   call Newton_cotes(function,h,a,b,res2)
-   write(*,*) 'res (six-point) = ', res2
+!   call Newton_cotes(function,h,a,b,res2)
+!   write(*,*) 'res (six-point) = ', res2
 
-   deallocate(function)
-end program
+!   deallocate(function)
+!end program
 

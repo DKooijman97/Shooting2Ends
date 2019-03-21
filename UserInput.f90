@@ -21,35 +21,35 @@ module userInput
 contains 
 	
 ! 	Asking user for the wanted number of meshpoints and the corresponding interval 
-   subroutine getUserInputGrid(self) 
-      type(gridType), intent(out) 	:: self
+   subroutine getUserInputGrid(Grid) 
+      type(gridType), intent(out) 	:: Grid
       
-      self%numberOfPoints = -1.0
-      do while (self%numberOfPoints<0) 
+      Grid%N = -1.0
+      do while (Grid%N<0) 
          print *, 	"Give number of meshpoints"
-	 read(*,*) 	self%numberOfPoints
+	 read(*,*) 	Grid%N
       end do 
 				
       print*, "Give start of interval"
-      read(*,*)	self%startInterval
+      read(*,*)	Grid%startInterval
 
       print*,  "Give end of interval"
-      read(*,*)  self%endInterval
+      read(*,*)  Grid%endInterval
 	
    end subroutine
 
-   subroutine readFromFile(self) 
-      type(gridType), intent(inout) :: self 
+   subroutine readFromFile(Grid) 
+      type(gridType), intent(inout) :: Grid 
       character(30)   :: fileName
 
       print*, "Give datafile name"
       read(*,*) fileName
       fileName = trim(fileName)
-      open(UNIT=10,FILE = fileName) 	
+      open(UNIT=10,FILE = fileName, STATUS = "old") 	
       
-      read(10,*) self%numberOfPoints
-      read(10,*) self%startInterval 
-      read(10,*) self%endInterval 
+      read(10,*) Grid%N
+      read(10,*) Grid%startInterval 
+      read(10,*) Grid%endInterval 
       
       close(10)
    end subroutine	
