@@ -1,27 +1,27 @@
 module GridSetup 
-	use NumberKinds
+   use NumberKinds
 
-	implicit none 
-	save 
-	private 
+   implicit none 
+   save 
+   private 
 	
-	public 		gridType
-	public		GridSetupNew, createGrid
+   public   gridType
+   public   GridSetupNew, createGrid
 	
-	type gridType 
-		Integer(KINT)				:: 	numberOfPoints
-		Real(KREAL)					::	startInterval, endInterval
-		Real (KREAL)			    :: 	distanceBetweenPoints 
-		Real(KREAL), allocatable 	:: 	Meshpoints(:)   
-	end type
+   type gridType 
+      integer(KINT)  ::  N
+      integer(KINT)  ::  startInterval, endInterval
+      real(KREAL)  ::  h 
+      real(KREAL), allocatable  ::  meshpoints(:)   
+   end type
 	
-	interface gridSetupNew
-		module procedure gridSetupNewPrivate
-	end interface
+   interface gridSetupNew
+      module procedure gridSetupNewPrivate
+   end interface
 	
-	interface createGrid 
-		module procedure createGridPrivate 
-	end interface
+   interface createGrid 
+      module procedure createGridPrivate 
+   end interface
 	
 	
 	
@@ -37,13 +37,19 @@ contains
 			type(gridType), intent(inout)	:: self
 			integer(KINT)					:: i
 			
-			allocate( self%Meshpoints(self%numberOfPoints) ) 
+			allocate( self%Meshpoints(self%N) ) 
 			self%Meshpoints(1) 		     		= self%startInterval
-			self%distanceBetweenPoints		= (self%endInterval-self%startInterval+1)/self%numberOfPoints
 			
-			do i = 2, self%numberOfPoints
-				self%Meshpoints(i) = self%startInterval + (i-1)*self%distanceBetweenPoints
-			enddo 
+			self%h		= real(self%endInterval-self%startInterval)/(self%N-1)
+						
+			do i = 2, self%N
+				self%Meshpoints(i) = self%startInterval + (i-1)*self%h
+			enddo
+			
+			print*, "n", real(self%N)
+			print *,"h", self%h
+			print*, "start/end", self%startInterval, self%endInterval
+			
 	end subroutine
 
 end module
