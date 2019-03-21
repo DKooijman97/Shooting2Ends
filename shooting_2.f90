@@ -15,10 +15,10 @@ module shooting
    
    type shootingType 
       real(KREAL), allocatable  :: y(:) 
-	  real(KREAL), allocatable  :: yIn(:)    
+      real(KREAL), allocatable  :: yIn(:)    
       real(KREAL), allocatable  :: yOut(:)
-	  real(KREAL)               :: lambda  
-	  real(KREAL)               :: dLambda                             
+      real(KREAL)               :: lambda  
+      real(KREAL)               :: dLambda                             
       integer(KINT)             :: x_m
    end type	  
 
