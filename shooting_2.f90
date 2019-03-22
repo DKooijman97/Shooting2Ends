@@ -43,7 +43,7 @@ contains
       self%x_m = Grid%N/2
       
       !Initialize lambda with first threePointScheme
-      self%lambda = threePoint%eigenValues(2)
+      self%lambda = maxval(threePoint%eigenValues)
       
       !Set min difference and initialize difference 
       print*, "Set min difference"
