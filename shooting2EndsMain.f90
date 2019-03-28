@@ -22,9 +22,10 @@ program Shooting2EndsTestGridSetup
    !call printEigenValuesVectors(threePointScheme, Grid) 
    
    call shootingNew(Shooting)
-   call calcEigenState(Shooting, Grid, threePointScheme)
+   call energyStates(Shooting, Grid, threePointScheme)
+  
    
-   call printEigenStates(Shooting%y, Grid%MeshPoints, threePointScheme%EigenValues(1), shooting%lambda)
+   call printEigenStates(Shooting%y, Grid%MeshPoints, threePointScheme%EigenValues*(-1), shooting%lambda)
 
 end program
 	
