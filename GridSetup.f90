@@ -64,7 +64,9 @@ contains
 	  
 	  select case (self%potential) 
 	  case (1)
-	     self%V = 0.0 
+	     self%V = 0.0
+		 self%V(:2,:2) = 10000000
+		 self%V(self%N-1:,self%N-1:) = 1000000000
 		
       case(2) 
 	     self%V = 0.0
