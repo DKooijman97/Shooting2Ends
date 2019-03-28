@@ -41,9 +41,9 @@ contains
       integer(KINT)                          :: i=0
 	  
       self%x_m = Grid%N/2
-      
+      print*, "xm", self%x_m
       !Initialize lambda with first threePointScheme
-      self%lambda = maxval(threePoint%eigenValues)
+      self%lambda = threePoint%eigenValues(1)
       
       !Set min difference and initialize difference 
       print*, "Set min difference"
@@ -57,22 +57,23 @@ contains
 
       !Loop which tests different lambdas until difference is small enough 
       do while (difference>minDifference)
-      i = i + 1
-         call InOut(self%yOut, 3, self%x_m, Grid%h, self%lambda,threePoint%V, 0)
-         call InOut(self%yIn, Grid%N-2, self%x_m, Grid%h, self%lambda,threePoint%V, 1)  
-		                  
+         i = i + 1
+         call InOut(self%yOut, 3, self%x_m, Grid%h, self%lambda,Grid%V, 0)
+         call InOut(self%yIn, Grid%N-2, self%x_m, Grid%h, self%lambda,Grid%V, 1)  
+		 
+		
          call calcDLambda(self, Grid) 
-	     
+	     !1print*, "dLambda",self%dLambda
          self%Lambda = self%Lambda - self%dLambda
 		 
          difference = abs(self%dLambda)
       enddo 
-	  
+	   
       !Combine the two 
       allocate( self%y(grid%N) ) 
       self%y(:2) = 1d-3
       self%y(Grid%N-1:) = 1d-3
-      call InOut(self%y, 3, Grid%N-3, Grid%h, self%lambda,threePoint%V, 0)
+	  call InOut(self%y, 3, Grid%N-3, Grid%h, self%lambda,Grid%V, 0)
       self%y = self%y-self%y(1)	   
    end subroutine 
    
@@ -94,16 +95,17 @@ contains
          enddo 
 	      
          !Normalize
-         call Newton_cotes(y,h,1,size(y,1),intergral)
-	 y = y/intergral
+         	
+		 call Newton_cotes(y,h,1,size(y,1),intergral)
+	     y = y/intergral
       case (1) 
          do i = startPoint+1, x_m-1, -1      
             y(i-1) = (-y(i+1)) + (h**2)*(lambda-V(i,i)+2/(h**2))*y(i) 
          enddo 
 	      
          !Normalize
-	 call Newton_cotes(y,h,1,size(y,1),intergral)
-	 y = y/intergral 		  
+	     call Newton_cotes(y,h,1,size(y,1),intergral)
+	     y = y/intergral 		  
       end select 
    end subroutine
    
@@ -119,8 +121,8 @@ contains
       call Newton_cotes(self%yOut**2,Grid%h,1,self%x_m,intergralOut2)
       call Newton_cotes(self%yIn**2,Grid%h,self%x_m,Grid%N,intergralIn2)
 	   
-      self%dLambda = -0.5*( derivativeIn/self%yIn(self%x_m) - derivativeOut/self%yOut(self%x_m) ) &
-	                 *( (1/(self%yOut(self%x_m)**2)) * intergralOut2 + (1/(self%yIn(self%x_m)**2)) * intergralIn2)**(-1) 
+      self%dLambda = -0.5*( derivativeIn/self%yIn(self%x_m) - derivativeOut/self%yOut(self%x_m) )* &
+	                 ( (1/(self%yOut(self%x_m)**2)) * intergralOut2 + (1/(self%yIn(self%x_m)**2)) * intergralIn2)**(-1)
    end subroutine 
 
    

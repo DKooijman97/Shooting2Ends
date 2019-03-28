@@ -32,6 +32,8 @@ contains
 	  type(gridType), intent(in) :: Grid
 	  real(KREAL)  ::  v_int 
 	  integer(KINT):: i
+	  real(KREAL) :: intergral
+	  
 	  allocate( self%eigenVectors(Grid%N,Grid%N) ) 
 	  allocate( self%eigenValues(Grid%N) ) 
 	  
@@ -46,16 +48,8 @@ contains
 		 self%L(i,i+1) = 1.0
 	  enddo 
 	  
-	  !Fill in V
-	  allocate( self%V(Grid%N,Grid%N) ) 
-	  self%V = 0.0 
-	  do i = Grid%N/20, Grid%N-Grid%N/20
-	     self%V(i,i) = 10
-	     self%V(Grid%N-i+1,Grid%N-i+1)= 10
-	  enddo
-	  
 	  !Allocate and calculating L 
-	  self%L = (-1.0/(Grid%h**2))*self%L+self%V
+	  self%L = (-1.0/(Grid%h**2))*self%L+Grid%V
 	  
 	  call diagonalize(self%L, self%eigenVectors, eigenvalues = self%eigenValues)
    end subroutine     
@@ -68,15 +62,15 @@ contains
 	  
 	  print*, "This are the eigenValues"
       do i = 1, 10
-	     print'(1000f15.8)',  self%eigenValues(i) 
+	     print*,  self%eigenValues(i) 
 	  enddo 
 		
 	  print*, "___________________________________________"
 		
-	  !print*, "This are the eigenvectors"
-	  !do i = 1, Grid%N
-	  !print'(1000f15.8)', self%eigenVectors(i,1) 
-	  !enddo
+	  print*, "This are the eigenvectors"
+	  do i = 1, Grid%N
+	   print'(i5,x,1000f15.8)', i, self%eigenVectors(i,1:3) 
+	  enddo
    end subroutine
 	
 	

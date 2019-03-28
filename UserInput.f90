@@ -50,8 +50,25 @@ contains
       read(10,*) Grid%N
       read(10,*) Grid%startInterval 
       read(10,*) Grid%endInterval 
+      read(10,*) Grid%Potential
+	  close(10)
+	  
+	  if (Grid%Potential == 1) then 
+			   print*, "chosen potential = infinite walls"
+			
+			elseif (Grid%Potential == 2) then
+			   print*, "chosen potential = finite walls"
+			
+			elseif (Grid%Potential == 3) then
+			   print*, "chosen potential = Gausian"
+			   
+			else 
+			   print*, "Potential not chosen correctly, please state your choose"
+			   print*, "1: Infinite wall, 2:Finite walls, 3: Gaussian"
+			   read(*,*) Grid%Potential 
+      end if
+	  
       
-      close(10)
    end subroutine	
 
 end module	
