@@ -9,10 +9,12 @@ module GridSetup
    public   GridSetupNew, createGrid
 	
    type gridType 
-      integer(KINT)  ::  N
-      integer(KINT)  ::  startInterval, endInterval
-      real(KREAL)  ::  h 
-      real(KREAL), allocatable  ::  meshpoints(:)   
+      integer(KINT)             ::  N
+      integer(KINT)             ::  startInterval, endInterval
+      real(KREAL)               ::  h 
+	  real(KREAL), allocatable  ::  V(:,:)
+	  Integer(KINT)             ::  Potential              !1 = Infinite walls, 2 = finite walls, 3 = Gaussian Potential              
+      real(KREAL), allocatable  ::  Meshpoints(:)   
    end type
 	
    interface gridSetupNew
@@ -35,7 +37,7 @@ contains
 	! Creates grid and stores it in Meshpoints%self
 	subroutine createGridPrivate(self)
 			type(gridType), intent(inout)	:: self
-			integer(KINT)					:: i
+			integer(KINT)                   :: i
 			
 			allocate( self%Meshpoints(self%N) ) 
 			self%Meshpoints(1) 		     		= self%startInterval
@@ -45,13 +47,44 @@ contains
 			do i = 2, self%N
 				self%Meshpoints(i) = self%startInterval + (i-1)*self%h
 			enddo
-			
-			print*, "n", real(self%N)
-			print *,"h", self%h
-			print*, "start/end", self%startInterval, self%endInterval
-			
-	end subroutine
+			print *, "start/end", self%startInterval, self%endInterval
+			print *, "n", real(self%N)
+	        print *, "h", self%h
+			call potential(self)
+            
+   end subroutine
+   
+   !Fill in V
+   subroutine potential(self) 
+      type(gridType), intent(inout)	:: self
+      integer(KINT)                 :: i
+      real(KREAL)                   :: V0, alpha
+	  
+	  allocate( self%V(self%N,self%N) ) 
+	  
+	  select case (self%potential) 
+	  case (1)
+	     self%V = 0.0 
+		
+      case(2) 
+	     self%V = 0.0
+		 do i = 1, self%N/20
+			self%V(i,i) = 1
+		 enddo
 
+		 do i = self%N, self%N-self%N/20,-1
+			self%V(i,i) = 1
+		 enddo
+	  
+      case(3) 
+	     V0 = 1
+		 alpha = 10
+		 do i = 1, self%N
+		    self%V(i,i) = (-V0)*exp(-alpha*self%meshpoints(i)**2)
+         enddo
+	  end select
+   end subroutine
+		
 end module
 			
 			

@@ -19,7 +19,8 @@ program Shooting2EndsTestGridSetup
 				
    call threePointSchemeNew(threePointScheme)
    call Diagonalization(threePointScheme, Grid)		
-				
+   !call printEigenValuesVectors(threePointScheme, Grid) 
+   
    call shootingNew(Shooting)
    call calcEigenState(Shooting, Grid, threePointScheme)
    
