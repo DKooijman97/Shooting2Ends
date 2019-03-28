@@ -12,8 +12,8 @@ module printModule
    
 contains 
    subroutine printEigenStates(vector, grid, trialEigenValue, eigenValue)
-      real(KREAL), intent(in)    :: vector(:), grid(:)
-	  real(KREAL), intent(in)    :: trialEigenValue
+      real(KREAL), intent(in)    :: vector(:,:), grid(:)
+	  real(KREAL), intent(in)    :: trialEigenValue(:)
 	  real(KREAL), intent(in)    :: eigenValue
 	  integer(KINT)              :: i 
 	  character(50)              :: fileName
@@ -23,13 +23,15 @@ contains
 	  fileName = trim(fileName) 
 	  open(20, FILE = fileName, STATUS = "NEW")
 	  
-	  write(20,'(a30,x,f10.6)')  "First trial eigenvalue:", trialEigenValue
-	  write(20,'(a30,x,f10.6)') "The final eigenvalue:", eigenValue
-	  write(20,*) "The normalized eigenvector:"
+	  !write(20,'(a30,x,f10.6)')  "First trial eigenvalue:", trialEigenValue
+	  !write(20,'(a30,x,f10.6)') "The final eigenvalue:", eigenValue
+	  !write(20,*) "The normalized eigenvectors:"
 	  
-	  do i = 1, size(vector,1)
-	     write(20,'(f10.6,x,f10.6)') grid(i), vector(i)
-	  end do
+	  do i = 1, size(grid,1)
+	     write(20,*) grid(i), vector(i,:)
+	  enddo
+	 
+	  
    end subroutine 
 end module 	  
    
