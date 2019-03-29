@@ -2,7 +2,8 @@ module userInput
 ! Contains a module to ask user directly for needed variables of the grid and a module to read information from a given text file
    use GridSetup
    use NumberKinds
-	
+   use shooting 
+   
    implicit none 
    save 
    private 
@@ -38,19 +39,21 @@ contains
 	
    end subroutine
 
-   subroutine readFromFile(Grid) 
-      type(gridType), intent(inout) :: Grid 
-      character(30)   :: fileName
+   subroutine readFromFile(Grid,shooting) 
+      type(gridType), intent(inout)     :: Grid 
+      type(shootingType), intent(inout) :: shooting 
+	  character(30)   :: fileName
 
       print*, "Give datafile name"
       read(*,*) fileName
       fileName = trim(fileName)
       open(UNIT=10,FILE = fileName, STATUS = "old") 	
       
-      read(10,*) Grid%N
+      read(10,*) Grid%N						
       read(10,*) Grid%startInterval 
       read(10,*) Grid%endInterval 
       read(10,*) Grid%Potential
+	  read(10,*) shooting%energyLevels
 	  close(10)
 	  
 	  if (Grid%Potential == 1) then 

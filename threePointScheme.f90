@@ -33,7 +33,7 @@ contains
 	  real(KREAL)  ::  v_int 
 	  integer(KINT):: i
 	  real(KREAL) :: intergral
-	  
+	
 	  allocate( self%eigenVectors(Grid%N,Grid%N) ) 
 	  allocate( self%eigenValues(Grid%N) ) 
 	  
