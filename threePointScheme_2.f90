@@ -12,7 +12,6 @@ module threePointScheme
 	
    type threePointSchemeType
       real(KREAL), allocatable 	::  	V(:,:), L(:,:) 
-      real(KREAL), allocatable 	::  	eigenVectors(:,:)
       real(KREAL), allocatable	::  	eigenValues(:)
    end type 
 
@@ -33,8 +32,9 @@ contains
 	  real(KREAL)  ::  v_int 
 	  integer(KINT):: i
 	  real(KREAL) :: intergral
-	  
-	  allocate( self%eigenVectors(Grid%N,Grid%N) ) 
+	  real(KREAL), allocatable :: E(:)
+	  integer(KINT) :: INFO
+	 
 	  allocate( self%eigenValues(Grid%N) ) 
 	  
 	  !Fill in S 
@@ -51,7 +51,17 @@ contains
 	  !Allocate and calculating L 
 	  self%L = (-1.0/(Grid%h**2))*self%L+Grid%V
 	  
-	  call diagonalize(self%L, self%eigenVectors, eigenvalues = self%eigenValues)
+	  do i = 1, Grid%N 
+	     self%eigenValues(i) = self%L(i,i) 
+      enddo 
+		 
+	  allocate ( E(Grid%N-1) ) 
+	  
+	  do i = 1, Grid%N-1
+	     E(i) = self%L(i+1,i) 
+      enddo
+	  
+	  call DSTERF( Grid%N, self%eigenValues, E, INFO )
    end subroutine     
 	
    !Prints 1st 10 eigenValues and Vectors
@@ -67,10 +77,10 @@ contains
 		
 	  print*, "___________________________________________"
 		
-	  print*, "This are the eigenvectors"
-	  do i = 1, Grid%N
-	   print'(i5,x,1000f15.8)', i, self%eigenVectors(i,1:3) 
-	  enddo
+	  !print*, "This are the eigenvectors"
+	  !do i = 1, Grid%N
+	   !print'(i5,x,1000f15.8)', i, self%eigenVectors(i,1:3) 
+	  !enddo
    end subroutine
 	
 	

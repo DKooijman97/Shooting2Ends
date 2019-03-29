@@ -79,7 +79,7 @@ contains
 		 enddo
 	  
       case(3) 
-	     V0 = 1
+	     V0 = 10
 		 alpha = 10
 		 do i = 1, self%N
 		    self%V(i,i) = (-V0)*exp(-alpha*self%meshpoints(i)**2)
