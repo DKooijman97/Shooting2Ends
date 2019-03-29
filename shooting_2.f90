@@ -59,6 +59,7 @@ contains
 	  self%yOut(:2) = 1d-10
       self%yIn(Grid%N-1:) = 1d-10
 	  
+	  beginLoop = 1
 	  endLoop = self%energyLevels 
 	  step = 1 
 	  
