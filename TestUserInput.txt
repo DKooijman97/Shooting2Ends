@@ -1,6 +1,5 @@
-280 	<--Number of meshpoints for three point scheme 
--1      <--start interval
-1       <--end interval 
-2      <--Potential type: 1: Infinite walls, 2: Finite walls, 3: Gaussian potential
+250	<--Number of meshpoints for three point scheme 
+-1 1    <--start interval/ end interval 
+3       <--Potential type: 1: Infinite walls, 2: Finite walls, 3: Gaussian potential
 10      <--Number of energy states, starting from n=0. 
 500     <--Number of meshpoints for shooting algorithm  

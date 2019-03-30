@@ -30,7 +30,7 @@ contains
 	   real(KREAL), intent(inout), allocatable   :: trialEigenValues(:)
        integer(KINT)                             :: length
 	   
-	   length = size(self%eigenValuesFinal,1)
+	   length = size( self%eigenValuesFinal ) 
 	   allocate( trialEigenValues(length) ) 
 	   trialEigenValues = self%eigenValuesFinal
    end subroutine
@@ -40,26 +40,29 @@ contains
    subroutine Diagonalization(self, Grid) 
       type(threePointSchemeType), intent(inout)  :: self 
 	  type(gridType), intent(in)                 :: Grid
-	  real(KREAL)                                :: v_int 
 	  integer(KINT)                              :: i, j
 	  real(KREAL)                                :: intergral
 	  real(KREAL), allocatable                   :: E(:)
 	  integer(KINT)                              :: INFO
 	 
-	  allocate( self%eigenValues(Grid%N) ) 
-	  
+	  allocate( self%eigenValues(Grid%N) )   
+		
 	  !Fill in S 
 	  allocate( self%L(Grid%N,Grid%N) ) 
+	  
 	  self%L = 0.0  
 	  self%L(1,1) = -2.0 
 	  self%L(1,2) = 1.0
-	  do i = 2, Grid%N
+	  self%L(grid%N, grid%N) = -2.0
+	  self%L(Grid%N, Grid%N-1) = 1.0
+	  
+	  do i = 2, Grid%N-1
 	     self%L(i,i)   = -2.0
 		 self%L(i,i-1) = 1.0
 		 self%L(i,i+1) = 1.0
 	  enddo 
-	  
-	  !Allocate and calculating L 
+	   
+	  ! Calculating L 
 	  self%L = (-1.0/(Grid%h**2))*self%L+Grid%V
 	  
 	  do i = 1, Grid%N 
@@ -80,16 +83,14 @@ contains
 	     self%eigenValuesFinal = self%eigenValues*(-1)
 		 
 	  elseif (Grid%potential == 2 .or. Grid%potential == 3) then 
-	     allocate( self%eigenValuesFinal( size(self%eigenValues)*2-1) )
+	     allocate( self%eigenValuesFinal( size(self%eigenValues)/2+1) )
 		 j = 1
 	     do i = 2, size(self%eigenValues), 2 
 	        self%eigenValuesFinal(j)  = self%eigenValues(i)*(-1) 
 			j = j+1
 	     enddo
       endif
-      
-	  deallocate(self%eigenValues)
-   
+	
    end subroutine     
 	
 end module		

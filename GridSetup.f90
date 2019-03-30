@@ -6,10 +6,10 @@ module GridSetup
    private 
 	
    public   gridType
-   public   GridSetupNew, createGrid
+   public   GridSetupNew, createGrid, gridSetupDelete
 	
    type gridType 
-      integer(KINT)             ::  N
+	  integer(KINT)             ::  N
       integer(KINT)             ::  startInterval, endInterval
       real(KREAL)               ::  h 
 	  real(KREAL), allocatable  ::  V(:,:)            
@@ -28,14 +28,27 @@ module GridSetup
 contains 
 
 	! Initializes self
-	subroutine gridSetupNewPrivate(self)
+	subroutine gridSetupNewPrivate(self, startInterval, endInterval,N, potentialType)
 			type(gridType), intent(inout)	:: self
+	        integer(KINT)                   :: startInterval, endInterval, N, potentialType
+	        
+			self%startInterval = startInterval
+			self%endInterval   = endInterval
+			self%N = N 
+	        self%Potential = potentialType
 	end subroutine 
+	
+	subroutine gridSetupDelete(self)
+	       type(gridType), intent(inout)	:: self
+		   deallocate(self%V)
+		   deallocate(self%MeshPoints)
+	end subroutine
 	
 	! Creates grid and stores it in Meshpoints%self
 	subroutine createGridPrivate(self)
 			type(gridType), intent(inout)	:: self
-			integer(KINT)                   ::  i
+			integer(KINT)                   :: startInterval, endInterval,N 
+			integer(KINT)                   :: i
 			
 			allocate( self%Meshpoints(self%N) ) 
 			self%Meshpoints(1) 		     		= self%startInterval
