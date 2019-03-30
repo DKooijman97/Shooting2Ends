@@ -86,18 +86,19 @@ contains
       type(GridType), intent(in)             :: Grid
       real(KREAL)                            :: Intergral 
 	  real(KREAL), intent(in)                :: firstLambda
-      real(KREAL)                            :: minDifference, difference
+      real(KREAL)                            :: maxDifference, difference
 	  real(KREAL), intent(inout)             :: y(:) 
 	  integer(KINT)                          :: i=0
 	  
-      self%Lambda = firstLambda
+      ! Initialize lambda with the first trial eigenvalue
+	  self%Lambda = firstLambda
 	  
 	  !Set min difference and initialize difference 
-      minDifference = 1d-10
+      maxDifference = 1d-10		! Loop continues until calculated alteration (dLambda)<maxDifference
       difference = 10000
 	  
 	  !Loop which tests different lambdas until difference is small enough 
-      do while (difference>minDifference)
+      do while (difference>maxDifference)
          i = i + 1
          call InOut(self%yOut, 3, self%x_m, Grid%h, self%lambda,Grid%V, 0)
          call InOut(self%yIn, Grid%N-2, self%x_m, Grid%h, self%lambda,Grid%V, 1)  
