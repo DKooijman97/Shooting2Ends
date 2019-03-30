@@ -1,8 +1,5 @@
 module userInput 
-! Contains a module to ask user directly for needed variables of the grid and a module to read information from a given text file
-   use GridSetup
    use NumberKinds
-   use shooting 
    
    implicit none 
    save 

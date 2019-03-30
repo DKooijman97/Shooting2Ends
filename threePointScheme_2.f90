@@ -2,7 +2,7 @@ module threePointScheme
    use GridSetup
    use Diagonalization
    use NumberKinds
-   use integration_module
+   
    implicit none 
    save 
    private 

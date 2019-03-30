@@ -1,9 +1,7 @@
 module printModule 
-   use shooting 
-   use threePointScheme
    use NumberKinds
-   use GridSetup
-   
+   use gridSetup 
+  
    implicit none 
    save 
    private 

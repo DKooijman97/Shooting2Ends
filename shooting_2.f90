@@ -1,9 +1,6 @@
 module shooting 
-   use GridSetup
-   use Diagonalization
    use NumberKinds
-   use integration_module
-   use threePointScheme
+   use GridSetup
    use integration_module
    
    implicit none
