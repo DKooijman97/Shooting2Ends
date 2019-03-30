@@ -11,14 +11,15 @@ module printModule
    public printEigenStates
    
 contains 
-   subroutine printEigenStates(vector, grid, V, trialEigenValue, eigenValue,nEnergyLevels)
-      real(KREAL), intent(in)    :: vector(:,:), grid(:),V(:,:)
-	  real(KREAL), intent(in)    :: trialEigenValue(:)
-	  real(KREAL), intent(in)    :: eigenValue(:)
-	  integer(KINT)              :: nEnergyLevels 
-	  integer(KINT),allocatable  :: n(:)
-	  integer(KINT)              :: i 
-	  character(50)              :: fileName
+   subroutine printEigenStates(vector, grid, trialEigenValue, eigenValue,nEnergyLevels)
+      type(gridType), intent(in)    :: grid
+	  real(KREAL), intent(in)       :: vector(:,:)
+	  real(KREAL), intent(in)       :: trialEigenValue(:)
+	  real(KREAL), intent(in)       :: eigenValue(:)
+	  integer(KINT)                 :: nEnergyLevels 
+	  integer(KINT),allocatable     :: n(:)
+	  integer(KINT)                 :: i 
+	  character(50)                 :: fileName
 	  
 	  print*, "Give filename to save data in txt file, in format: filename.txt" 
 	  read*, fileName 
@@ -34,8 +35,8 @@ contains
 	  n = (/ (i, i=1,nEnergyLevels) /)
 	  
 	  write(20,*) "x ", "potential", n
-	  do i = 1, size(grid,1)
-	     write(20,*) grid(i),V(i,i), vector(i,:)
+	  do i = 1, size(grid%meshPoints,1)
+	     write(20,*) grid%meshPoints(i),grid%V(i,i), vector(i,:)
 	  enddo
 	 
    end subroutine 

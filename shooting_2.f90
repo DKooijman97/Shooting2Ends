@@ -14,13 +14,12 @@ module shooting
    public shootingNew, shootingDelete, energyStates, getEigenStates
    
    type shootingType 
-	  !private
+	  private
 	  real(KREAL), allocatable  :: y(:,:), yOut(:), yIn(:) !Vectors in which the final eigenvector, eigenvector outwards and inwards can be stored
       real(KREAL), allocatable  :: LambdaVector(:)         !Vector containing the final eigenvalues
 	  real(KREAL), allocatable  :: firstLambda(:)          !Vector containing the the first trial eigenvalues per energy level
 	  real(KREAL)               :: lambda, dLambda                                     
       integer(KINT)             :: x_m                     !Matching point for the inwards and outwards eigenvectors
-      integer(KINT)             :: energyLevels   		   !Specification of the wanted number of energy levels, always starting with 1	 
    end type	  
 
 contains 
@@ -52,21 +51,22 @@ contains
    end subroutine
    
    
-   subroutine energyStates(self, Grid, trialEigenValues) 
+   subroutine energyStates(self, Grid, trialEigenValues, nEnergyLevels) 
       type(shootingType), intent(inout)      :: self
 	  type(GridType), intent(inout)          :: Grid
       real(KREAL), intent(in)                :: trialEigenValues(:)
-	  integer(KINT)                          :: i, beginLoop, endLoop, step,j
+	  integer(KINT), intent(in)              :: nEnergyLevels   	        !Specification of the wanted number of energy levels, always starting with 1	 
+	  integer(KINT)                          :: i
 	  
 	  !Calculate x_m 
 	  self%x_m = Grid%N/2
       
 	  !Allocate needed vectors
-	  allocate( self%y(Grid%N,self%energyLevels) )
+	  allocate( self%y(Grid%N,nEnergyLevels) )
 	  allocate( self%yOut(self%x_m+1) )
       allocate( self%yIn(Grid%N) )
-      allocate( self%LambdaVector(self%energyLevels) )
-	  allocate( self%firstLambda(self%energyLevels) ) 
+      allocate( self%LambdaVector(nEnergyLevels) )
+	  allocate( self%firstLambda(nEnergyLevels) ) 
 	  
 	  self%x_m = Grid%N/2
       print*, "xm", self%x_m
@@ -76,9 +76,9 @@ contains
       self%yIn(Grid%N-1:) = 1d-10
 	
 	  !Loop over the different energy levels:
-	  do i = 1, self%energyLevels 
+	  do i = 1, nEnergyLevels 
 	     call calcEigenState(self, Grid, trialEigenValues(i), self%y(:,i) )  
-	     print*, "Progress", int(real(i)/self%energyLevels*100.0), "%" 
+	     print*, "Progress", int(real(i)/nEnergyLevels*100.0), "%" 
 	     self%LambdaVector(i) = self%Lambda
 	  end do 
    end subroutine

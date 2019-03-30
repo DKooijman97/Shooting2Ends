@@ -9,38 +9,41 @@ program Shooting2EndsTestGridSetup
    implicit none 
    
    !Define needed types:
-   type(gridType)              ::  Grid, gridShooting
+   type(gridType)              ::  GridThreePoint, gridShooting
    type(threePointSchemeType)  ::  threePointScheme
    type(shootingType)          ::  Shooting
 	
    !Define needed variables: 	
-   real(KREAL), allocatable    ::  trialEigenValues(:)	               !The trial eigenvalues for shooting algorithm, calculated with the three point scheme method
-   real(KREAL), allocatable    ::  eigenVectors(:,:), eigenValues(:)   !Final eigenvectors and eigenvalues as calculated with the shooting algorithm 	
+   integer(KINT)               ::  startInterval, endInterval, N_threePoint 
+   integer(KINT)               ::  N_shooting, potentialType, nEnergyLevels      !The needed parameters to create a grid
    
-   call readFromFile(Grid,Shooting)
+   real(KREAL), allocatable    ::  trialEigenValues(:)	                         !The first trial eigenvalues for shooting algorithm
+   real(KREAL), allocatable    ::  eigenVectors(:,:), eigenValues(:)             !Final eigenvectors and eigenvalues as calculated with the shooting algorithm 	
    
-   call GridSetupNew(Grid)
-   call createGrid(Grid)
-				
+   ! Getting needed variables from a input file.txt
+   call readFromFile(startInterval, endInterval, N_threePoint, N_shooting, potentialType, nEnergyLevels) 
+   
+   ! Creating grid for three point scheme
+   call GridSetupNew(GridThreePoint,startInterval, endInterval, N_threePoint, potentialType)
+   call createGrid(GridThreePoint)
+	
+   ! Calculate first trial eigenvalues with three point scheme
    call threePointSchemeNew(threePointScheme)
-   call Diagonalization(threePointScheme, Grid)	
+   call Diagonalization(threePointScheme, GridThreePoint)	
    call getTrialEigenValues(threePointScheme,trialEigenValues)
+   call gridSetupDelete(GridThreePoint) 
   
-   !Create New grid, with 500 points 
-   gridShooting%N             = 280
-   gridShooting%startInterval = Grid%startInterval
-   gridShooting%endInterval   = Grid%endInterval
-   gridShooting%Potential     = Grid%potential
-   call GridSetupNew(GridShooting)
+   ! Create New grid for shooting algorithm, with 500 points
+   call GridSetupNew(GridShooting,startInterval, endInterval, N_shooting, potentialType)
    call createGrid(GridShooting)
    
-  
+   ! Calculate the eigenstates of the system with the shooting algorithm 
    call shootingNew(Shooting)
-   call energyStates(Shooting, GridShooting, trialEigenValues)
+   call energyStates(Shooting, GridShooting, trialEigenValues, nEnergyLevels)
    call getEigenStates(Shooting, eigenVectors, eigenValues) 
    
-   call printEigenStates(eigenVectors, GridShooting%MeshPoints,GridShooting%V, trialEigenValues &
-                        ,eigenValues,shooting%energyLevels)
+   ! Printing results to txt file
+   call printEigenStates(eigenVectors, GridShooting, trialEigenValues, eigenValues,nEnergyLevels)
 
 end program
 	
