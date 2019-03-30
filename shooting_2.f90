@@ -22,7 +22,7 @@ module shooting
 	  real(KREAL)               :: lambda  
       real(KREAL)               :: dLambda                             
       integer(KINT)             :: x_m
-      integer(KINT)             :: energyLevels   		!Specification of the number of energy levels, always starting with 1
+      integer(KINT)             :: energyLevels   		!Specification of the wanted number of energy levels, always starting with 1
    end type	  
 
 contains 
@@ -35,13 +35,12 @@ contains
       type(shootingType), intent(inout)  :: self
    end subroutine
    
-   
    subroutine energyStates(self, Grid, threePoint) 
       type(shootingType), intent(inout)      :: self
-	  type(GridType), intent(in)             :: Grid
+	  type(GridType), intent(inout)          :: Grid
       type(ThreePointSchemeType), intent(in) :: threePoint
 	  integer(KINT)                          :: i, beginLoop, endLoop, step,j
-      
+	  
 	  !Calculate x_m 
 	  self%x_m = Grid%N/2
       

@@ -21,38 +21,24 @@ module userInput
 
 contains 
 	
-! 	Asking user for the wanted number of meshpoints and the corresponding interval 
-   subroutine getUserInputGrid(Grid) 
-      type(gridType), intent(out) 	:: Grid
-      
-      Grid%N = -1.0
-      do while (Grid%N<0) 
-         print *, 	"Give number of meshpoints"
-	 read(*,*) 	Grid%N
-      end do 
-				
-      print*, "Give start of interval"
-      read(*,*)	Grid%startInterval
-
-      print*,  "Give end of interval"
-      read(*,*)  Grid%endInterval
-	
-   end subroutine
-
    subroutine readFromFile(Grid,shooting) 
       type(gridType), intent(inout)     :: Grid 
       type(shootingType), intent(inout) :: shooting 
 	  character(30)   :: fileName
 
+      ! Getting file name with input from user 
       print*, "Give datafile name"
       read(*,*) fileName
       fileName = trim(fileName)
-      open(UNIT=10,FILE = fileName, STATUS = "old") 	
       
+	  ! Opening file and reading input parameters
+	  open(UNIT=10,FILE = fileName, STATUS = "old") 	
+      	  
       read(10,*) Grid%N						
       read(10,*) Grid%startInterval 
       read(10,*) Grid%endInterval 
       read(10,*) Grid%Potential
+	  
 	  read(10,*) shooting%energyLevels
 	  close(10)
 	  
@@ -70,8 +56,26 @@ contains
 			   print*, "1: Infinite wall, 2:Finite walls, 3: Gaussian"
 			   read(*,*) Grid%Potential 
       end if
-	  
-      
+	    
    end subroutine	
+
+! 	Asking user for the wanted number of meshpoints and the corresponding interval 
+   subroutine getUserInputGrid(Grid) 
+      type(gridType), intent(out) 	:: Grid
+      
+      Grid%N = -1.0
+      do while (Grid%N<0) 
+         print *, 	"Give number of meshpoints"
+	     read(*,*) 	Grid%N
+      end do 
+				
+      print*, "Give start of interval"
+      read(*,*)	Grid%startInterval
+
+      print*,  "Give end of interval"
+      read(*,*)  Grid%endInterval
+	
+   end subroutine
+
 
 end module	
