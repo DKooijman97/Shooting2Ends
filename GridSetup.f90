@@ -12,9 +12,9 @@ module GridSetup
       integer(KINT)             ::  N
       integer(KINT)             ::  startInterval, endInterval
       real(KREAL)               ::  h 
-	  real(KREAL), allocatable  ::  V(:,:)
-	  Integer(KINT)             ::  Potential              !1 = Infinite walls, 2 = finite walls, 3 = Gaussian Potential              
+	  real(KREAL), allocatable  ::  V(:,:)            
       real(KREAL), allocatable  ::  Meshpoints(:)   
+      Integer(KINT)             ::  Potential              !1 = Infinite walls, 2 = finite walls, 3 = Gaussian Potential 
    end type
 	
    interface gridSetupNew
@@ -24,8 +24,6 @@ module GridSetup
    interface createGrid 
       module procedure createGridPrivate 
    end interface
-	
-	
 	
 contains 
 
@@ -37,7 +35,7 @@ contains
 	! Creates grid and stores it in Meshpoints%self
 	subroutine createGridPrivate(self)
 			type(gridType), intent(inout)	:: self
-			integer(KINT)                   :: i
+			integer(KINT)                   ::  i
 			
 			allocate( self%Meshpoints(self%N) ) 
 			self%Meshpoints(1) 		     		= self%startInterval

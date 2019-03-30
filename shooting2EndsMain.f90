@@ -8,7 +8,7 @@ program Shooting2EndsTestGridSetup
 	
    implicit none 
 		
-   type(gridType)              ::  Grid 
+   type(gridType)              ::  Grid, gridShooting
    type(threePointSchemeType)  ::  threePointScheme
    type(shootingType)          ::  Shooting
 	
@@ -19,11 +19,21 @@ program Shooting2EndsTestGridSetup
 				
    call threePointSchemeNew(threePointScheme)
    call Diagonalization(threePointScheme, Grid)		
-   
-   call shootingNew(Shooting)
-   call energyStates(Shooting, Grid, threePointScheme)
   
-   call printEigenStates(Shooting%y, Grid%MeshPoints,Grid%V, Shooting%firstLambda, shooting%LambdaVector,shooting%energyLevels)
+   !Create New grid, with 500 points 
+   gridShooting%N             = 500
+   gridShooting%startInterval = Grid%startInterval
+   gridShooting%endInterval   = Grid%endInterval
+   gridShooting%Potential     = Grid%potential
+   call GridSetupNew(GridShooting)
+   call createGrid(GridShooting)
+	  
+  
+   call shootingNew(Shooting)
+   call energyStates(Shooting, GridShooting, threePointScheme)
+  
+   call printEigenStates(Shooting%y, GridShooting%MeshPoints,GridShooting%V, Shooting%firstLambda &
+                        ,shooting%LambdaVector,shooting%energyLevels)
 
 end program
 	
