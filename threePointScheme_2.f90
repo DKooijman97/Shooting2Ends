@@ -7,12 +7,13 @@ module threePointScheme
    save 
    private 
 	
-   public  threePointSchemeNew, threePointSchemeDelete, Diagonalization, printEigenValuesVectors
+   public  threePointSchemeNew, threePointSchemeDelete,getTrialEigenValues, Diagonalization
    public  threePointSchemeType
 	
    type threePointSchemeType
-      real(KREAL), allocatable 	::  	V(:,:), L(:,:) 
-      real(KREAL), allocatable	::  	eigenValues(:)
+	  private
+	  real(KREAL), allocatable 	::  	L(:,:) 
+      real(KREAL), allocatable	::  	eigenValues(:), eigenValuesFinal(:)
    end type 
 
 contains
@@ -24,16 +25,26 @@ contains
       type(threePointSchemeType), intent(inout) :: self
    end subroutine 
    
+   subroutine getTrialEigenValues(self, trialEigenValues) 
+       type(threePointSchemeType), intent(inout) :: self
+	   real(KREAL), intent(inout), allocatable   :: trialEigenValues(:)
+       integer(KINT)                             :: length
+	   
+	   length = size(self%eigenValuesFinal,1)
+	   allocate( trialEigenValues(length) ) 
+	   trialEigenValues = self%eigenValuesFinal
+   end subroutine
+   
 ! Subroutine which uses Diagonalize to calculate the eigenvalues and eigenvectors 
 ! which are used as first trial value in shooting algorithm
    subroutine Diagonalization(self, Grid) 
-      type(threePointSchemeType), intent(inout)  ::  self 
-	  type(gridType), intent(in) :: Grid
-	  real(KREAL)  ::  v_int 
-	  integer(KINT):: i
-	  real(KREAL) :: intergral
-	  real(KREAL), allocatable :: E(:)
-	  integer(KINT) :: INFO
+      type(threePointSchemeType), intent(inout)  :: self 
+	  type(gridType), intent(in)                 :: Grid
+	  real(KREAL)                                :: v_int 
+	  integer(KINT)                              :: i, j
+	  real(KREAL)                                :: intergral
+	  real(KREAL), allocatable                   :: E(:)
+	  integer(KINT)                              :: INFO
 	 
 	  allocate( self%eigenValues(Grid%N) ) 
 	  
@@ -62,26 +73,23 @@ contains
       enddo
 	  
 	  call DSTERF( Grid%N, self%eigenValues, E, INFO )
+   
+      !If neccesary remove 1/2 energy levels and make E negative 
+	  if (Grid%potential == 1) then
+	     allocate( self%eigenValuesFinal( size(self%eigenValues)) )
+	     self%eigenValuesFinal = self%eigenValues*(-1)
+		 
+	  elseif (Grid%potential == 2 .or. Grid%potential == 3) then 
+	     allocate( self%eigenValuesFinal( size(self%eigenValues)*2-1) )
+		 j = 1
+	     do i = 2, size(self%eigenValues), 2 
+	        self%eigenValuesFinal(j)  = self%eigenValues(i)*(-1) 
+			j = j+1
+	     enddo
+      endif
+      
+	  deallocate(self%eigenValues)
+   
    end subroutine     
-	
-   !Prints 1st 10 eigenValues and Vectors
-   subroutine printEigenValuesVectors(self, Grid) 	
-      type(threePointSchemeType), intent(inout)  ::  self 
-	  type(gridType), intent(in) :: Grid
-	  integer  :: i
-	  
-	  print*, "This are the eigenValues"
-      do i = 1, 10
-	     print*,  self%eigenValues(i) 
-	  enddo 
-		
-	  print*, "___________________________________________"
-		
-	  !print*, "This are the eigenvectors"
-	  !do i = 1, Grid%N
-	   !print'(i5,x,1000f15.8)', i, self%eigenVectors(i,1:3) 
-	  !enddo
-   end subroutine
-	
 	
 end module		

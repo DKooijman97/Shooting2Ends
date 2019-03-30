@@ -11,18 +11,16 @@ module shooting
    private 
    
    public shootingType
-   public shootingNew, shootingDelete, energyStates 
+   public shootingNew, shootingDelete, energyStates, getEigenStates
    
    type shootingType 
-      real(KREAL), allocatable  :: y(:,:) 
-      real(KREAL), allocatable  :: yIn(:)    
-      real(KREAL), allocatable  :: yOut(:)
-      real(KREAL), allocatable  :: LambdaVector(:)
-	  real(KREAL),allocatable   :: firstLambda(:)
-	  real(KREAL)               :: lambda  
-      real(KREAL)               :: dLambda                             
-      integer(KINT)             :: x_m
-      integer(KINT)             :: energyLevels   		!Specification of the wanted number of energy levels, always starting with 1
+	  !private
+	  real(KREAL), allocatable  :: y(:,:), yOut(:), yIn(:) !Vectors in which the final eigenvector, eigenvector outwards and inwards can be stored
+      real(KREAL), allocatable  :: LambdaVector(:)         !Vector containing the final eigenvalues
+	  real(KREAL), allocatable  :: firstLambda(:)          !Vector containing the the first trial eigenvalues per energy level
+	  real(KREAL)               :: lambda, dLambda                                     
+      integer(KINT)             :: x_m                     !Matching point for the inwards and outwards eigenvectors
+      integer(KINT)             :: energyLevels   		   !Specification of the wanted number of energy levels, always starting with 1	 
    end type	  
 
 contains 
@@ -35,10 +33,29 @@ contains
       type(shootingType), intent(inout)  :: self
    end subroutine
    
-   subroutine energyStates(self, Grid, threePoint) 
+   subroutine getEigenStates(self, eigenVectors, eigenValues) 
+      type(shootingType), intent(inout)         :: self
+	  real(KREAL), intent(inout), allocatable   :: eigenVectors(:,:), eigenValues(:)
+      integer(KINT)                             :: matrix_size(2), length, i
+	   
+	  length = size(self%LambdaVector)
+	  allocate( eigenValues(length) ) 
+	  eigenValues = self%LambdaVector
+	  
+	  do i = 1, 2
+	     matrix_size(i) = size(self%y, i) 
+	  enddo 
+	  
+	  allocate( eigenVectors(matrix_size(1),matrix_size(2)) )
+	  eigenVectors = self%y 
+	 
+   end subroutine
+   
+   
+   subroutine energyStates(self, Grid, trialEigenValues) 
       type(shootingType), intent(inout)      :: self
 	  type(GridType), intent(inout)          :: Grid
-      type(ThreePointSchemeType), intent(in) :: threePoint
+      real(KREAL), intent(in)                :: trialEigenValues(:)
 	  integer(KINT)                          :: i, beginLoop, endLoop, step,j
 	  
 	  !Calculate x_m 
@@ -57,26 +74,13 @@ contains
 	  !Initialize boundary
 	  self%yOut(:2) = 1d-10
       self%yIn(Grid%N-1:) = 1d-10
-	  
-	  beginLoop = 1
-	  endLoop = self%energyLevels 
-	  step = 1 
-	  
-	  if (Grid%potential == 2 .or. Grid%potential == 3) then 
-	     beginLoop = 2
-		 endLoop = 2*endLoop 
-		 step = 2
-      endif 
 	
-	  j = 1
-	  do i = beginLoop, endLoop, step 
-	     self%firstLambda(j)  = ThreePoint%eigenValues(i)*(-1)
-		 call calcEigenState( self,Grid,self%firstLambda(j), self%y(:,j) )
-	     self%LambdaVector(j) = self%Lambda
-		 print*, "Progress", int(real(j)/self%energyLevels*100.0), "%"
-		 j = j+1
-	  enddo
-   
+	  !Loop over the different energy levels:
+	  do i = 1, self%energyLevels 
+	     call calcEigenState(self, Grid, trialEigenValues(i), self%y(:,i) )  
+	     print*, "Progress", int(real(i)/self%energyLevels*100.0), "%" 
+	     self%LambdaVector(i) = self%Lambda
+	  end do 
    end subroutine
    
    
