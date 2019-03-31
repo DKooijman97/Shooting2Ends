@@ -1,3 +1,22 @@
+!Author:          Dennis Kooijman 
+!Date:            31-3-2019
+!Part of program: Shooting2Ends
+
+!PURPOSE:
+!Module to create a grid in an interval with a certain potential,
+!for nummerical calculation of the eigenstates of a particle in a box.
+
+!INPUT:
+!The number of points, start/end interval and type of potential:
+!Infinite walls, finite walls and gaussian
+
+!OUTPUT: 
+!Output is a matrix with the potential on the diagonal, vector of 
+!the meshpoints and the meshpoint distance. 
+
+!EXTERNAL MODULES:
+!Kind of integers and reals is done with the numberKinds module.
+
 module GridSetup 
    use NumberKinds
 
@@ -9,12 +28,12 @@ module GridSetup
    public   GridSetupNew, createGrid, gridSetupDelete
 	
    type gridType 
-	  integer(KINT)             ::  N
-      integer(KINT)             ::  startInterval, endInterval
-      real(KREAL)               ::  h 
-	  real(KREAL), allocatable  ::  V(:,:)            
-      real(KREAL), allocatable  ::  Meshpoints(:)   
-      Integer(KINT)             ::  Potential              !1 = Infinite walls, 2 = finite walls, 3 = Gaussian Potential 
+	  integer(KINT)             ::  N                              !Number of points
+      integer(KINT)             ::  startInterval, endInterval     !Start and end of the box
+      real(KREAL)               ::  h                              !Distance between two consecutive points
+	  real(KREAL), allocatable  ::  V(:,:)                         !Potential per point
+      real(KREAL), allocatable  ::  Meshpoints(:)                  !Points on the grid
+      Integer(KINT)             ::  Potential                      !1 = Infinite walls, 2 = finite walls, 3 = Gaussian Potential 
    end type
 	
    interface gridSetupNew
@@ -44,7 +63,7 @@ contains
 		   deallocate(self%MeshPoints)
 	end subroutine
 	
-	! Creates grid and stores it in Meshpoints%self
+	! Creates grid and stores it in self%meshpoints
 	subroutine createGridPrivate(self)
 			type(gridType), intent(inout)	:: self
 			integer(KINT)                   :: startInterval, endInterval,N 
@@ -65,7 +84,7 @@ contains
             
    end subroutine
    
-   !Fill in V
+   !Fill in V, depending on chosen potential type
    subroutine potential(self) 
       type(gridType), intent(inout)	:: self
       integer(KINT)                 :: i

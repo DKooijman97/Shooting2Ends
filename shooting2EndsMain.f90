@@ -1,3 +1,17 @@
+!Author:          Dennis Kooijman 
+!Date:            31-3-2019
+!Part of program: Shooting2Ends
+
+!PURPOSE: 
+!Program to calculate the eigenvalues and eigenvectors nummerically on a grid using a shooting algorithm. 
+!The shooting algorithm is initialized with the three point scheme method using a coarse grid. Input is readed from 
+!a text file. 
+
+!OUTPUT: 
+!Output is saved in an space delimited text file and can be used to visualize the eigenstates. 
+!Three different potentials can be chosen: Infinite walls, Finite walls and a Gaussian potential. 
+
+
 program Shooting2EndsTestGridSetup
    use GridSetup 
    use UserInput

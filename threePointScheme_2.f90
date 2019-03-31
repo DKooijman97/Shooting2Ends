@@ -1,3 +1,22 @@
+!Author:          Dennis Kooijman 
+!Date:            31-3-2019
+!Part of program: Shooting2Ends
+
+!PURPOSE 
+!Module to calculate the eigenvalues of a particle in a box with the three point scheme method. 
+!Diagonalization of a symmetric tridiagonal matrix is performed to obtain the eigenvalues. 
+
+!INPUT: 
+!The input is the grid on which the calculations should be performed (created with the GridSetup module).
+
+!OUTPUT: 
+!Output is a vector with the eigenvalues per energylevel. 
+
+!EXTERNAL MODULES:
+!diagonalization is done with the DSTERF subroutine of the LAPACK library. 
+!The grid on which the calculation should take place is created with the GridSetup module. The corresponding type of this module (gridType) 
+!is also used. Type of integers and reals is done with the numberKinds module
+
 module threePointScheme
    use GridSetup
    use Diagonalization
@@ -39,11 +58,10 @@ contains
 ! which are used as first trial value in shooting algorithm
    subroutine Diagonalization(self, Grid) 
       type(threePointSchemeType), intent(inout)  :: self 
-	  type(gridType), intent(in)                 :: Grid
-	  integer(KINT)                              :: i, j
-	  real(KREAL)                                :: intergral
+	  type(gridType), intent(in)                 :: Grid                   !Grid on which calculations should take place
+	  integer(KINT)                              :: i, j             
 	  real(KREAL), allocatable                   :: E(:)
-	  integer(KINT)                              :: INFO
+	  integer(KINT)                              :: INFO                   
 	 
 	  allocate( self%eigenValues(Grid%N) )   
 		
