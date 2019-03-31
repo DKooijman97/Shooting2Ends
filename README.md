@@ -55,4 +55,4 @@ Command line to compile program:
 gfortran NumberKinds.f90 GridSetup.f90 blas.f lapack.f trapez.f90 threePointScheme.f90 shooting.f90 UserInput.f90 printModule.f90 shooting2EndsMain.f90 -o shooting2EndsMain
 
 Recommendations for future updates: 
-Include possibility to also have the user choose the high of the wall, or the alpha and V0 of an gaussian potential well. 
+Include possibility to also have the user choose the hight of the wall, or the alpha and V0 of an gaussian potential well. 
