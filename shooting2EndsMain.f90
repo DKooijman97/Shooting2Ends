@@ -57,7 +57,7 @@ program Shooting2EndsTestGridSetup
    call getEigenStates(Shooting, eigenVectors, eigenValues) 
    
    ! Printing results to txt file
-   call printEigenStates(eigenVectors, GridShooting, trialEigenValues, eigenValues,nEnergyLevels)
+   call printEigenStates(eigenVectors, GridShooting, trialEigenValues, eigenValues)
 
 end program
 	

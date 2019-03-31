@@ -31,12 +31,11 @@ module printModule
    public printEigenStates
    
 contains 
-   subroutine printEigenStates(vectors, grid, trialEigenValue, eigenValue,nEnergyLevels)
+   subroutine printEigenStates(vectors, grid, trialEigenValue, eigenValue)
       type(gridType), intent(in)    :: grid
 	  real(KREAL), intent(in)       :: vectors(:,:)
 	  real(KREAL), intent(in)       :: trialEigenValue(:)
 	  real(KREAL), intent(in)       :: eigenValue(:)
-	  integer(KINT)                 :: nEnergyLevels 
 	  integer(KINT),allocatable     :: n(:)
 	  integer(KINT)                 :: i 
 	  character(50)                 :: fileName
@@ -47,12 +46,14 @@ contains
 	  open(20, FILE = fileName, STATUS = "new")
 	  
 	  write(20,*) "energy_level Trial_eigenValues Final_EigenValues"
-	  do i = 1, nEnergyLevels
-	     write(20,*) i, trialEigenValue(i), eigenValue(i)
+	  do i = 1, size(eigenValue,1)
+	     write(20,*) i-1, trialEigenValue(i), eigenValue(i)
 	  enddo
 	  
-	  allocate ( n(nEnergyLevels) )
-	  n = (/ (i, i=1,nEnergyLevels) /)
+	  write(20,*) "         "
+	  
+	  allocate ( n(size(vectors, 2) ) )
+	  n = (/ (i, i=0, (size(vectors, 2)-1) ) /)
 	  
 	  write(20,*) "x ", "potential", n
 	  do i = 1, size(grid%meshPoints,1)
