@@ -1,3 +1,25 @@
+!Author:          Dennis Kooijman 
+!Date:            31-3-2019
+!Part of program: Shooting2Ends
+
+!PURPOSE 
+!Module to print the eigenstates per energy level of a particle in a box  
+
+!INPUT: 
+!Input is a matrix with the eigenvectors column wise, an Gridtype (created with the setupGrid module)
+!the first trial eigenvalues for the shooting algorithm 
+!the final eigenvalues of the shooting algorithm. 
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!The number of energylevels
+
+!OUTPUT: 
+!Output is a vector with the eigenvalues per energylevel. 
+!The output is a space delimited txt file. 
+
+!EXTERNAL MODULES:
+!The grid on which the calculations have been performed is created with the GridSetup module. 
+!The corresponding type of this module (gridType) is also used. 
+!Kind of integers and reals is done with the numberKinds module
+
 module printModule 
    use NumberKinds
    use gridSetup 
@@ -9,9 +31,9 @@ module printModule
    public printEigenStates
    
 contains 
-   subroutine printEigenStates(vector, grid, trialEigenValue, eigenValue,nEnergyLevels)
+   subroutine printEigenStates(vectors, grid, trialEigenValue, eigenValue,nEnergyLevels)
       type(gridType), intent(in)    :: grid
-	  real(KREAL), intent(in)       :: vector(:,:)
+	  real(KREAL), intent(in)       :: vectors(:,:)
 	  real(KREAL), intent(in)       :: trialEigenValue(:)
 	  real(KREAL), intent(in)       :: eigenValue(:)
 	  integer(KINT)                 :: nEnergyLevels 
@@ -34,7 +56,7 @@ contains
 	  
 	  write(20,*) "x ", "potential", n
 	  do i = 1, size(grid%meshPoints,1)
-	     write(20,*) grid%meshPoints(i),grid%V(i,i), vector(i,:)
+	     write(20,*) grid%meshPoints(i),grid%V(i,i), vectors(i,:)
 	  enddo
 	 
    end subroutine 

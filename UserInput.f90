@@ -1,3 +1,13 @@
+!Author:          Dennis Kooijman 
+!Date:            31-3-2019
+!Part of program: Shooting2Ends
+
+!PURPOSE:
+!Module to read in needed parameters from a txt file.
+
+!EXTERNAL MODULES:
+!Kind of integers and reals is done with the numberKinds module.
+
 module userInput 
    use NumberKinds
    
@@ -6,14 +16,6 @@ module userInput
    private 
 	
    public   readFromFile 
-
-!   interface getUserInputGrid 
-!	module procedure getUserInputGridPrivate 
-!   end interface 
-
-!   interface readFromFile 
-!        module procedure readFromFIlePrivate
-!   end interface 	
 
 contains 
 	

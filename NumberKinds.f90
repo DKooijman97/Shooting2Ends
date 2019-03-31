@@ -1,3 +1,4 @@
+!Module taken from the Confusion Monte Carlo program 
 module NumberKinds
 	implicit none
 

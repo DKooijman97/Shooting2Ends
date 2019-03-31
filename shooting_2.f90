@@ -1,3 +1,24 @@
+!Author:          Dennis Kooijman 
+!Date:            31-3-2019
+!Part of program: Shooting2Ends
+
+!Purpose: 
+!Module to calculate the eigenvalues and eigenstates nummerically on a grid using a shooting algorithm. 
+
+!Input:
+!The input is the grid on which the calculations should be performed (created with the GridSetup module), the number
+!of wanted eigenstates and the first trial eigenvalues to make certain the shooting algorithm converges correctly. 
+!The first trial eigenstates can be calculated with the threePointScheme module. 
+
+!Output: 
+!The output is a matrix with the eigenvector per energylevel columns wise and the eigenvalues per energylevel in a vector
+
+!Use of external modules: 
+!Normalization is performed with the integration_module (trapez.f90) which is utilizing Newton-Cotes formulas to 
+!integrate a function on a grid. 
+!The grid on which the calculation should take place is created with the GridSetup module. The corresponding type of this module (gridType) 
+!is also used. Type of integers and reals is done with the numberKinds module
+
 module shooting 
    use NumberKinds
    use GridSetup
@@ -15,12 +36,12 @@ module shooting
 	  real(KREAL), allocatable  :: y(:,:), yOut(:), yIn(:) !Vectors in which the final eigenvector, eigenvector outwards and inwards can be stored
       real(KREAL), allocatable  :: LambdaVector(:)         !Vector containing the final eigenvalues
 	  real(KREAL), allocatable  :: firstLambda(:)          !Vector containing the the first trial eigenvalues per energy level
-	  real(KREAL)               :: lambda, dLambda                                     
+	  real(KREAL)               :: lambda, dLambda         !EigenValue and the correction of the eigenvalue during the shooting loop                            
       integer(KINT)             :: x_m                     !Matching point for the inwards and outwards eigenvectors
    end type	  
 
 contains 
-   
+   !Standard ADT subroutines: 
    subroutine shootingNew(self) 
       type(shootingType), intent(inout)  :: self
    end subroutine
@@ -43,15 +64,14 @@ contains
 	  enddo 
 	  
 	  allocate( eigenVectors(matrix_size(1),matrix_size(2)) )
-	  eigenVectors = self%y 
-	 
-   end subroutine
+	  eigenVectors = self%y  
+   end subroutine 
    
-   
+   !Subroutine which loops over the different energylevels:
    subroutine energyStates(self, Grid, trialEigenValues, nEnergyLevels) 
       type(shootingType), intent(inout)      :: self
-	  type(GridType), intent(inout)          :: Grid
-      real(KREAL), intent(in)                :: trialEigenValues(:)
+	  type(GridType), intent(inout)          :: Grid                        !Grid on which calculations should take place
+      real(KREAL), intent(in)                :: trialEigenValues(:)         !The first trial eigenvalues per energy level
 	  integer(KINT), intent(in)              :: nEnergyLevels   	        !Specification of the wanted number of energy levels, always starting with 1	 
 	  integer(KINT)                          :: i
 	  
@@ -80,13 +100,13 @@ contains
 	  end do 
    end subroutine
    
-   
+   !Subroutine which calculates eigenstate per energylevel, using the inOut & calcDLambda subroutines
    subroutine calcEigenState(self, Grid, firstLambda, y)
       type(shootingType), intent(inout)      :: self
       type(GridType), intent(in)             :: Grid
       real(KREAL)                            :: Intergral 
 	  real(KREAL), intent(in)                :: firstLambda
-      real(KREAL)                            :: maxDifference, difference
+      real(KREAL)                            :: maxDifference, difference   ! Loop continues until calculated correction (dLambda)<maxDifference
 	  real(KREAL), intent(inout)             :: y(:) 
 	  integer(KINT)                          :: i=0
 	  
@@ -94,7 +114,7 @@ contains
 	  self%Lambda = firstLambda
 	  
 	  !Set min difference and initialize difference 
-      maxDifference = 1d-10		! Loop continues until calculated alteration (dLambda)<maxDifference
+      maxDifference = 1d-8	
       difference = 10000
 	  
 	  !Loop which tests different lambdas until difference is small enough 
@@ -116,6 +136,7 @@ contains
       y = (y-y(1))**2
    end subroutine 
    
+   !Subroutine which calculates the inwards and outwards eigenvector
    subroutine InOut(y, startPoint, x_m, h, lambda,V, IN_OUT)
       real(KREAL), intent(out)  :: y(:)                      !Vector in which eigenVector should be stored
       real(KREAL), intent(in)   :: h                         !Mesh-spacing 
@@ -147,6 +168,7 @@ contains
       end select 
    end subroutine
    
+   !Subroutine which calculates the correction of the eigenvalue
    subroutine calcDLambda(self, Grid) 
       type(shootingType), intent(inout)  :: self
       type(GridType), intent(in)         :: Grid
