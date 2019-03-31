@@ -50,3 +50,7 @@ Other uses of modules:
 
 The three point scheme module could also be used without the shooting algorithm. 
 The gridSetup module could be used for all problems requiring a uniform grid of N equidistant mesh points. 
+
+Command line to compile program:  
+gfortran NumberKinds.f90 GridSetup.f90 blas.f lapack.f trapez.f90 threePointSch
+eme.f90 shooting.f90 UserInput.f90 printModule.f90 shooting2EndsMain.f90 -o shooting2EndsMain
