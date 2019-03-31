@@ -30,6 +30,22 @@ Output:
 An example of the txt file output of the program is given in ExampleOutput.txt. 
 Also an visualization of this data is given in: visualizationEigenStates.pdf. 
 
+Structure: 
+
+An schematic overview of the design, structure and flow of the program is given in Flow_and_design_program.pdf. The program consist out of 5 main modules. 
+
+1. The first module is userInput and has a subroutine readFromFile which reads the needed parameters from a txt file. The name of the txt is given by the user in the terminal. 
+
+2. The given parameters are then used to create a grid for the three points scheme. This is done by the gridSetup module. In this module the meshpoints, meshdistance and potential on the grid is calculated. All parameters are stored in an gridType. The variables in gridType are public and also used in the other modules. 
+
+3. With the created grid the first trial eigenvalues are calculated with the threePointScheme module. The output of the module is an vector with the eigenvalues per energylevel. The threePointScheme main subroutine is Diagonalization. This subroutine calculates the eigenvalues by performing diagonalization on a symmetrix tridiagonal matrix L. Diagonalization in performed with DSTERF from the LAPACK library. LAPACK needs the BLAS library in order to work. L as well as the eigenValues are stored in a threePointSchemeType. The parameters in this type are private. Therefor, an getter is included to retrieve the eigenvalues from the module.
+
+4. The eigenvalues as determined with the three point scheme method are then used as starting point for the shooting algorithm. First a new grid is setup with more gridpoints with the gridSetup module. Then the shooting module is used. The shooting module has multiple subroutines. All variables needed in multiple subroutines are stored in a shootingType. The parameters in this shootingType are private. 
+The first main subroutine is energyStates, which loops over the wanted energyStates. It stores the eigenvalues per energy level in an vector and the eigenvectors in a matrix. energyStates calls the subroutine calcEigenState. This subroutine includes the main loop of the shooting algorithm, mainly testing multiple eigenvalues until difference between two consectutive eigenvalues is small enough. To calculate the needed inwards and outwards eigenvectors the subroutine InOut is called. To calculated the correction of the eigenVector the subroutine calcdLambda is used. Because the variables in the shootingType are private an getter is included to retrieve the eigenstates from the module. 
+
+5. Finally, the results are saved in an space delimited text file by the printModule. 
+
+
 Other uses of modules: 
 
 The three point scheme module could also be used without the shooting algorithm. 
