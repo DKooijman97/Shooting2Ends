@@ -15,6 +15,7 @@ The eigenstate can be solved for three arbitrary potentials:
 Input text file: 
 An example of the layout of a text file is given below and in TestUserInput.txt.
           _______________________________________________________________________
+          
           250	    <--Number of meshpoints for three point scheme 
           -1 1    <--start interval/ end interval 
           1       <--Potential type: 1: Infinite walls, 2: Finite walls, 3: Gaussian potential
