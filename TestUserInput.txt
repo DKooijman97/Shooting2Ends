@@ -2,4 +2,4 @@
 -1 1    <--start interval/ end interval, must be integers
 1       <--Potential type: 1: Infinite walls, 2: Finite walls, 3: Gaussian potential
 10      <--Number of energy states, starting from n=0. 
-200     <--Number of meshpoints for shooting algorithm  
+400     <--Number of meshpoints for shooting algorithm  
