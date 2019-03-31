@@ -26,6 +26,7 @@ program Shooting2EndsTestGridSetup
    type(gridType)              ::  GridThreePoint, gridShooting
    type(threePointSchemeType)  ::  threePointScheme
    type(shootingType)          ::  Shooting
+   type(printType)             ::  TypePrint	
 	
    !Define needed variables: 	
    integer(KINT)               ::  startInterval, endInterval, N_threePoint 
@@ -36,6 +37,10 @@ program Shooting2EndsTestGridSetup
    
    ! Getting needed variables from a input file.txt
    call readFromFile(startInterval, endInterval, N_threePoint, N_shooting, potentialType, nEnergyLevels) 
+   
+   ! Getting name to save data at end program 
+   call newPrint(TypePrint)
+   call nameOfFile(TypePrint)
    
    ! Creating grid for three point scheme
    call GridSetupNew(GridThreePoint,startInterval, endInterval, N_threePoint, potentialType)
@@ -56,8 +61,9 @@ program Shooting2EndsTestGridSetup
    call energyStates(Shooting, GridShooting, trialEigenValues, nEnergyLevels)
    call getEigenStates(Shooting, eigenVectors, eigenValues) 
    
+   
    ! Printing results to txt file
-   call printEigenStates(eigenVectors, GridShooting, trialEigenValues, eigenValues)
+   call printEigenStates(TypePrint, GridShooting, eigenValues, eigenVectors, trialEigenValues, nEnergyLevels)
 
 end program
 	
