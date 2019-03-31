@@ -89,14 +89,14 @@ contains
       print*, "xm", self%x_m
       
 	  !Initialize boundary
-	  self%yOut(:2) = 1d-10
+	  self%yOut(:2) = -1d-10
       self%yIn(Grid%N-1:) = 1d-10
 	
 	  !Loop over the different energy levels:
 	  do i = 1, nEnergyLevels 
-	     call calcEigenState(self, Grid, trialEigenValues(i), self%y(:,i) )  
+		 call calcEigenState(self, Grid, trialEigenValues(i), self%y(:,i) )  
 	     print*, "Progress", int(real(i)/nEnergyLevels*100.0), "%" 
-	     self%LambdaVector(i) = self%Lambda
+		 self%LambdaVector(i) = self%Lambda
 	  end do 
    end subroutine
    
@@ -155,7 +155,7 @@ contains
          enddo 
 	      
          !Normalize
-		 call Newton_cotes(y**2,h,1,size(y,1),intergral)
+		 call Newton_cotes(y**2,h,1,size(y,1),intergral)   !van y**2 naar y 
 	     y = y/sqrt(intergral)
       case (1) 
          do i = startPoint+1, x_m-1, -1      
@@ -164,7 +164,7 @@ contains
 	      
          !Normalize
 	     call Newton_cotes(y**2,h,1,size(y,1),intergral)
-	     y = y/intergral	  
+	     y = y/sqrt(intergral)	  
       end select 
    end subroutine
    

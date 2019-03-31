@@ -1,5 +1,5 @@
-200	<--Number of meshpoints for three point scheme, needs to be high enough for the shooting to converge 
+280	<--Number of meshpoints for three point scheme, needs to be high enough for the shooting to converge (280 enough) 
 -1 1    <--start interval/ end interval, must be integers
 1       <--Potential type: 1: Infinite walls, 2: Finite walls, 3: Gaussian potential
 10      <--Number of energy states, starting from n=0. 
-500    <--Number of meshpoints for shooting algorithm  
+200     <--Number of meshpoints for shooting algorithm  

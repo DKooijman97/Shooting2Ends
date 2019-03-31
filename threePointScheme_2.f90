@@ -100,6 +100,11 @@ contains
 	     allocate( self%eigenValuesFinal( size(self%eigenValues)) )
 	     self%eigenValuesFinal = self%eigenValues*(-1)
 		 
+		! do i = 1, size(self%eigenValuesFinal)
+		!    print*, "f/e", self%eigenValuesFinal(i), self%eigenValues(i)
+	    ! enddo
+		 
+		 
 	  elseif (Grid%potential == 2 .or. Grid%potential == 3) then 
 	     allocate( self%eigenValuesFinal( size(self%eigenValues)/2+1) )
 		 j = 1
