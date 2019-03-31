@@ -8,6 +8,7 @@ Program to calculate the eigenvalues and eigenvectors nummerically on a grid usi
 The shooting algorithm is initialized with the three point scheme method using a coarse grid. Input is readed in from a text file.
 Output is given in a space delimited txt file, which can be used to visiualize the eigenstates. 
 The eigenstate can be solved for three arbitrary potentials: 
+                
                 *Potential well with infinite walls 
                 *Potential well with finite walls (On both sides 5% of the box consists of walls) 
                 *Gaussian potential well
