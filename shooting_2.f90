@@ -133,7 +133,7 @@ contains
       y(:2) = 1d-3
       y(Grid%N-1:) = 1d-3
 	  call InOut(y, 3, Grid%N-3, Grid%h, self%lambda,Grid%V, 0)
-      y = (y-y(1))**2
+      y = (y-y(1))**2 
    end subroutine 
    
    !Subroutine which calculates the inwards and outwards eigenvector
@@ -154,18 +154,16 @@ contains
             y(i+1) = (-y(i-1)) + (h**2)*( lambda-V(i,i)+ 2/(h**2) ) * y(i)
          enddo 
 	      
-         !Normalize
-		 call Newton_cotes(y**2,h,1,size(y,1),intergral)   !van y**2 naar y 
-	     y = y/sqrt(intergral)
       case (1) 
          do i = startPoint+1, x_m-1, -1      
             y(i-1) = (-y(i+1)) + (h**2)*(lambda-V(i,i)+2/(h**2))*y(i) 
          enddo 
-	      
-         !Normalize
-	     call Newton_cotes(y**2,h,1,size(y,1),intergral)
-	     y = y/sqrt(intergral)	  
-      end select 
+	  end select
+      
+	  !Normalize
+	  call Newton_cotes(y**2,h,1,size(y,1),Intergral)
+	  y = y/sqrt(intergral)	  
+      
    end subroutine
    
    !Subroutine which calculates the correction of the eigenvalue
