@@ -9,7 +9,7 @@
 !Input is a matrix with the eigenvectors column wise, an Gridtype (created with the setupGrid module)
 !the first trial eigenvalues for the shooting algorithm 
 !the final eigenvalues of the shooting algorithm. 
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!The number of energylevels
+!The number of energylevels
 
 !OUTPUT: 
 !Output is a vector with the eigenvalues per energylevel. 
